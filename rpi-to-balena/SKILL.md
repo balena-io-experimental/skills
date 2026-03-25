@@ -138,7 +138,6 @@ services:
 
   app:
     build: ./app
-    privileged: true
     depends_on:
       - kmod
     volumes:
@@ -148,7 +147,11 @@ volumes:
   app-data:
 ```
 
-## Quick-Reference: Dockerfile Pattern
+While the `kmod` service handles building and loading the kernel module, the `app` service can be your main application that depends on the module being loaded.
+The `app` service should prefer to use the `devices` key within within the `docker-compose.yml` file to access the hardware interfaces exposed by the kernel module, rather using privileged mode.
+However, privileged mode is still required for the `kmod` service to load the kernel module.
+
+## Quick-Reference: Common Dockerfile Pattern for running installation scripts from peripheral vendors
 
 ```dockerfile
 FROM debian:bookworm
@@ -156,14 +159,10 @@ FROM debian:bookworm
 RUN apt-get update && apt-get install -y wget ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-# Stub device nodes to skip runtime-only code paths in vendor script
-RUN mkdir -p /dev && touch /dev/i2c-0
-
 # Run vendor install script — package steps only, skip kernel driver
 RUN wget -O install.sh https://vendor.example.com/install.sh \
     && chmod +x install.sh \
-    && ./install.sh -p library_package \
-    && ./install.sh -p tools_package \
+    && ./install.sh \
     && rm install.sh
 
 COPY entry.sh /entry.sh
@@ -177,3 +176,4 @@ Use `Dockerfile.template` only when you need `%%BALENA_MACHINE_NAME%%` or `%%BAL
 
 - [Kmod Sidecar Pattern](./references/kmod-sidecar.md) — building and loading custom out-of-tree kernel modules
 - [Common Pitfalls](./references/pitfalls.md) — wrong driver repo, version mismatches, naming conventions, silent failures
+- [Blog Article: Use Out-of-Tree Linux Kernel Modules in balena](./references/blog-use-out-of-tree-modules.md) — detailed guide on building and loading custom kernel modules on balenaOS, including handling kernel headers and multi-stage Dockerfiles.

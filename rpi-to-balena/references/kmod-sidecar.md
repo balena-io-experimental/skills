@@ -1,6 +1,6 @@
 # Kmod Sidecar Pattern
 
-Build and load custom out-of-tree kernel modules on balenaOS using a dedicated sidecar container. This is the proven pattern from production balena projects (e.g. ai-hat-demo).
+Build and load custom out-of-tree kernel modules on balenaOS using a dedicated sidecar container. This is the proven pattern from production balena projects (e.g. [kernel-module-build](https://github.com/balena-os/kernel-module-build)).
 
 ## When to Use
 
