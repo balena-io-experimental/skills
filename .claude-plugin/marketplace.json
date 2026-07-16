@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "balena-skills",
+  "owner": {
+    "name": "balena",
+    "email": "hello@balena.io"
+  },
+  "description": "Agent skills for working with balena — balenaCloud conversion and pine/SBVR API queries.",
+  "plugins": [
+    {
+      "name": "balena",
+      "displayName": "balena",
+      "description": "balena agent skills: convert Docker projects to balenaCloud, and write pine/SBVR API queries.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/balenify",
+        "./skills/pine-query"
+      ],
+      "author": {
+        "name": "balena",
+        "email": "hello@balena.io"
+      },
+      "license": "Apache-2.0",
+      "homepage": "https://github.com/balena-io-experimental/skills",
+      "repository": "https://github.com/balena-io-experimental/skills",
+      "keywords": ["balena", "balenacloud", "docker", "iot", "pine", "sbvr", "skills"],
+      "category": "developer-tools"
+    }
+  ]
+}
