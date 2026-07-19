@@ -13,6 +13,7 @@
       "description": "balena agent skills: convert Docker projects to balenaCloud, and write pine/SBVR API queries.",
       "source": "./",
       "strict": false,
+      "version": "0.0.0",
       "skills": [
         "./skills/balenify",
         "./skills/pine-query"

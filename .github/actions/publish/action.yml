@@ -1,0 +1,35 @@
+name: "Publish plugin"
+description: "Package the balena plugin files and attach them to the GitHub release"
+
+# Flowzone always provides these inputs; they must be declared.
+inputs:
+  json:
+    description: "JSON stringified object of all workflow inputs"
+    required: true
+  secrets:
+    description: "JSON stringified object of all workflow secrets"
+    required: true
+  variables:
+    description: "JSON stringified object of all workflow variables"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Read version
+      id: v
+      shell: bash
+      run: echo "version=$(jq -r '.plugins[0].version' .claude-plugin/marketplace.json)" >> "$GITHUB_OUTPUT"
+
+    # upload-artifact zips its inputs, so list the plugin files directly rather
+    # than pre-zipping (which would double-compress). Flowzone attaches any
+    # gh-release-* artifact to the draft release.
+    - name: Upload release artifact
+      uses: actions/upload-artifact@v7.0.1
+      with:
+        name: gh-release-balena-${{ steps.v.outputs.version }}
+        path: |
+          .claude-plugin
+          skills
+          LICENSE
+          README.md
