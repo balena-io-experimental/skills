@@ -8,9 +8,9 @@
   "description": "Agent skills for working with balena — balenaCloud conversion and pine/SBVR API queries.",
   "plugins": [
     {
-      "name": "balena",
-      "displayName": "balena",
-      "description": "balena agent skills: convert Docker projects to balenaCloud, and write pine/SBVR API queries.",
+      "name": "balena-dev",
+      "displayName": "balena development",
+      "description": "Skills for developing apps on balena: convert Docker projects to balenaCloud, and query the balena API/SDK with pine/SBVR.",
       "source": "./",
       "strict": false,
       "version": "0.0.0",
@@ -28,5 +28,8 @@
       "keywords": ["balena", "balenacloud", "docker", "iot", "pine", "sbvr", "skills"],
       "category": "developer-tools"
     }
-  ]
+  ],
+  "renames": {
+    "balena": "balena-dev"
+  }
 }
