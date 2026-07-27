@@ -13,7 +13,7 @@
       "description": "Skills for developing apps on balena: convert Docker projects to balenaCloud, and query the balena API/SDK with pine/SBVR.",
       "source": "./",
       "strict": false,
-      "version": "0.0.0",
+      "version": "0.0.2",
       "skills": [
         "./skills/balenify",
         "./skills/pine-query"
