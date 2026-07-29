@@ -1,0 +1,44 @@
+name: "Publish plugin"
+description: "Package the balena-dev plugin (synthesized plugin.json + skills) and attach it to the GitHub release"
+
+# Flowzone always provides these inputs; they must be declared.
+inputs:
+  json:
+    description: "JSON stringified object of all workflow inputs"
+    required: true
+  secrets:
+    description: "JSON stringified object of all workflow secrets"
+    required: true
+  variables:
+    description: "JSON stringified object of all workflow variables"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    # The repo is a marketplace (marketplace.json, strict:false) with no committed
+    # plugin.json — mirroring anthropics/skills. The org admin panel ingests a
+    # standalone plugin, so synthesize plugin.json from the marketplace entry (the
+    # single source of truth, kept current by versionist) and stage the plugin files.
+    - name: Stage plugin
+      id: v
+      shell: bash
+      run: |
+        set -euo pipefail
+        version="$(jq -r '.plugins[0].version' .claude-plugin/marketplace.json)"
+        echo "version=${version}" >> "$GITHUB_OUTPUT"
+        stage="${RUNNER_TEMP}/plugin"
+        mkdir -p "${stage}/.claude-plugin"
+        jq '.plugins[0] | {name, version, description, author, homepage, repository, license, keywords}' \
+          .claude-plugin/marketplace.json > "${stage}/.claude-plugin/plugin.json"
+        cp -R skills LICENSE README.md "${stage}/"
+
+    # upload-artifact zips the staged files once (no pre-zip -> no double compression).
+    # Flowzone attaches any gh-release-* artifact to the draft release.
+    - name: Upload release artifact
+      uses: actions/upload-artifact@v7.0.1
+      with:
+        name: gh-release-balena-dev-${{ steps.v.outputs.version }}
+        path: ${{ runner.temp }}/plugin
+        # .claude-plugin/ is a dot-dir; upload-artifact excludes hidden files by default
+        include-hidden-files: true
